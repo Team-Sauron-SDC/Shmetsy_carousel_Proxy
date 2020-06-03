@@ -1,0 +1,41 @@
+config:
+  
+  target: 'http://localhost:5500'
+  http:
+    pool: 75
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      maxVusers: 1
+      name: '1 user per 60sec warmup'
+    - duration: 60
+      arrivalRate: 30
+      maxVusers: 30
+      name: '30 users per 60sec'
+    - duration: 120
+      arrivalRate: 100
+      maxVusers: 100
+      name: '100 users'
+    - duration: 120
+      arrivalRate: 1000
+      maxVusers: 1000
+      name: '30 users per 60sec'
+
+  processor: "./randomId.js"
+
+scenarios:
+  - name: 'get small images'
+    weight: 60
+    flow:
+    - function: "randomId"
+    - get:
+        url: "/api/carousel/{{id}}"
+    - log: "Sent a request to small/{{ id }}"
+
+  - name: 'get large images'
+    weight: 60
+    flow:
+    - function: "randomId"
+    - get:
+        url: "/api/carouselEnlarged/{{id}}"
+    - log: "Sent a request to large/{{ id }}"

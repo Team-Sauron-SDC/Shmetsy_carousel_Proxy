@@ -1,0 +1,9 @@
+version: '2'
+services:
+  web:
+    image: mta630/proxy:1.6
+    ports:
+      - "5500:5500"
+    environment:
+      - PORT=5500
+      - HOST=0.0.0.0
